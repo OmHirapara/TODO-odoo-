@@ -1,4 +1,5 @@
 // import sequelize from "../sequelize.js";
+import User from "../models/user.js"
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -11,23 +12,10 @@ const createToken = (id) => {
   });
 };
 
-async function checkUsers() {
-  const result = await db.query("SELECT * FROM users");
-  return result.rows;
-}
 
-const home = (req, res) => {
-  res.render("home.ejs");
-};
 
 const login = (req, res) => {
-  res.render("login.ejs",{
-    auth:false
-  });
-};
-
-const register = (req, res) => {
-  res.render("register.ejs");
+  res.render("login.ejs");
 };
 
 const secrets = (req, res) => {
@@ -36,54 +24,64 @@ const secrets = (req, res) => {
 
 const signup = async (req, res) => {
   try {
-    const users = await checkUsers();
-    // console.log(users);
     const { username, password } = req.body;
-    if ((username, password)) {
-      (await users.find((user) => user.email == username))
-        ? res.send("User Already Exist.Try logging in.")
-        : //hashing the password and saving it in the database
-          bcrypt.hash(password, saltRounds, async (err, hash) => {
-            if (err) {
-              console.error("Error hashing password:", err);
+    // Check if username (email) and password are provided
+    if (username && password) {
+      // Check if user already exists in the database
+      const existingUser = await User.findOne({ where: { email: username } });
+      if (existingUser) {
+        res.send("User already exists. Try logging in.");
+      } else {
+        // Hash the password using bcrypt
+        bcrypt.hash(password, saltRounds, async (err, hash) => {
+          if (err) {
+            console.error("Error hashing password:", err);
+            res.status(500).send("Internal server error");
+          } else {
+            // Create a new user record in the database
+            const newUser = await User.create({
+              email: username,
+              password: hash,
+            });
+
+            if (newUser) {
+              res.redirect("/auth"); // Redirect to login page after successful signup
             } else {
-              // console.log("Hashed Password:", hash);
-              const newUser = await db.query(
-                "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *",
-                [username, hash]
-              );
-              if (newUser) {
-                res.redirect("/auth/login");
-              } else {
-                res.send("Something went wrong");
-              }
+              res.send("Something went wrong");
             }
-          });
+          }
+        });
+      }
     } else {
-      res.send("Please Enter Email And Password");
+      res.send("Please enter email and password");
     }
   } catch (error) {
-    console.log(error);
+    console.error("Error in signup:", error);
+    res.status(500).send("Internal server error");
   }
 };
 const signin = async (req, res) => {
   try {
-    const users = await checkUsers();
     const { username, password } = req.body;
-    if ((username, password)) {
-      const result = await users.find((user) => user.email == username);
-      if (result) {
-        //verifying the password
-        // console.log(typeof password, typeof result.password);
-        bcrypt.compare(password, result.password, (err, results) => {
+
+    // Check if username (email) and password are provided
+    if (username && password) {
+      // Find user in the database by email
+      const user = await User.findOne({ where: { email: username } });
+
+      if (user) {
+        // Compare hashed password with provided password
+        bcrypt.compare(password, user.password, (err, result) => {
           if (err) {
             console.error("Error comparing passwords:", err);
+            res.status(500).send("Internal server error");
           } else {
-            if (results) {
-              // console.log(result.id);
-              const token = createToken(result.id);
+            if (result) {
+              // Passwords match, create JWT token
+              const token = createToken(user.id);
               res.cookie("jwt", token, { httpOnly: true });
-              res.redirect("/blog");
+              // res.redirect("/todo");
+              res.redirect("/todo") // Redirect to blog page after successful login
             } else {
               res.send("Incorrect Password");
             }
@@ -96,13 +94,11 @@ const signin = async (req, res) => {
       res.send("Please Enter Email And Password.");
     }
   } catch (error) {
-    console.log(error);
+    console.error("Error in signin:", error);
+    res.status(500).send("Internal server error");
   }
 };
 const controllers = {
-  home,
-  register,
-  secrets,
   login,
   signup,
   signin,

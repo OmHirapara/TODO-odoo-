@@ -3,12 +3,10 @@ import controller from "../controllers/user.js";
 
 const router = express.Router();
 
-router.get("/", controller.login);
+router.get("/auth", controller.login);
 
-router.get("/register", controller.register);
+router.post("/signup", controller.signup);
 
-router.post("/register", controller.signup);
-
-router.post("/login", controller.signin);
+router.post("/signin", controller.signin);
 
 export default router;

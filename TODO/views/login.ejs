@@ -2,45 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" 
+          content="width=device-width, 
+                         initial-scale=1.0">
     <title>GeeksforGeeks</title>
-    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" 
+          href="/styles/style.css">
 </head>
 
 <body>
-    <div class="navbar">
-      <h1 class="heading">GeeksforGeeks</h1>
+    
+        
+<div class="navbar">
+    <div class="navbar-left">
+      <span class="navbar-text">To Do List</span>
     </div>
-
+    <div class="navbar-right">
+      <!-- Add other navbar items here if needed -->
+    </div>
+  </div>
+  
+  
+    <!-- container div -->
     <div class="container">
+
+        <!-- upper button section to select
+             the login or signup form -->
         <div class="slider"></div>
         <div class="btn">
             <button class="login">Login</button>
             <button class="signup">Signup</button>
         </div>
 
+        <!-- Form section that contains the
+             login and the signup form -->
         <div class="form-section">
+
+            <!-- login form -->
+            <form action="/signin" method="POST">
             <div class="login-box">
-                <input type="email" class="email ele" placeholder="youremail@email.com">
-                <input type="password" class="password ele" placeholder="password">
+                <input type="email" 
+                       class="email ele" 
+                       placeholder="youremail@email.com"
+                       name="username">
+                <input type="password"
+                       class="password ele" 
+                       placeholder="password"
+                       name="password">
                 <button class="clkbtn">Login</button>
                 <div class="error-message" id="error-message"></div>
             </div>
-
+        </form>
+        
+            <!-- signup form -->
+            <form action="/signup" method="POST">
             <div class="signup-box">
-                <input type="email" class="email ele" placeholder="youremail@email.com">
-                <input type="password" class="password ele" placeholder="password">
+                <input type="email" 
+                       class="email ele" 
+                       placeholder="youremail@email.com"
+                       name="username">
+                <input type="password" 
+                       class="password ele" 
+                       placeholder="password"
+                       name="password">
+                
                 <button class="clkbtn">Signup</button>
-              
             </div>
+        </form>
+
         </div>
     </div>
     <script >
-let signup = document.querySelector(".signup");
+        let signup = document.querySelector(".signup");
 let login = document.querySelector(".login");
 let slider = document.querySelector(".slider");
 let formSection = document.querySelector(".form-section");
 let errorMessage = document.getElementById("error-message");
+
 
 signup.addEventListener("click", () => {
     slider.classList.add("moveslider");
@@ -49,14 +87,15 @@ signup.addEventListener("click", () => {
 
 login.addEventListener("click", () => {
     slider.classList.remove("moveslider");
-    formSection.classList.remove("form-section-move");      
-    <% if (locals.auth) { %>
-    errorMessage.textContent = 'User not registered';
-    errorMessage.style.visibility = 'visible';
-  <% } else { %>
-    errorMessage.style.visibility = 'hidden';
-  <% } %>
-        })
+    formSection.classList.remove("form-section-move");
+    if (!isUserRegistered) {
+        errorMessage.textContent = "User not registered";
+        errorMessage.style.visibility = "visible";
+    } else {
+        errorMessage.style.visibility = "visible";
+    }
+});
     </script>
 </body>
+
 </html>

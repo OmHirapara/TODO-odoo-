@@ -11,9 +11,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(express.json());
 app.use(cookieParser());
-app.use("/login",(req,res)=>{
-  res.render("login.ejs")
-})
+// app.use("/login",(req,res)=>{
+//   res.render("login.ejs")
+// })
 app.use("/", router);
 
 const host = process.env.HOST;
