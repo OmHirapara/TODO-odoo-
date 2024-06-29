@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeeksforGeeks</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+
+<body>
+    <div class="navbar">
+      <h1 class="heading">GeeksforGeeks</h1>
+    </div>
+
+    <div class="container">
+        <div class="slider"></div>
+        <div class="btn">
+            <button class="login">Login</button>
+            <button class="signup">Signup</button>
+        </div>
+
+        <div class="form-section">
+            <div class="login-box">
+                <input type="email" class="email ele" placeholder="youremail@email.com">
+                <input type="password" class="password ele" placeholder="password">
+                <button class="clkbtn">Login</button>
+                <div class="error-message" id="error-message"></div>
+            </div>
+
+            <div class="signup-box">
+                <input type="email" class="email ele" placeholder="youremail@email.com">
+                <input type="password" class="password ele" placeholder="password">
+                <button class="clkbtn">Signup</button>
+              
+            </div>
+        </div>
+    </div>
+    <script >
+let signup = document.querySelector(".signup");
+let login = document.querySelector(".login");
+let slider = document.querySelector(".slider");
+let formSection = document.querySelector(".form-section");
+let errorMessage = document.getElementById("error-message");
+
+signup.addEventListener("click", () => {
+    slider.classList.add("moveslider");
+    formSection.classList.add("form-section-move");
+});
+
+login.addEventListener("click", () => {
+    slider.classList.remove("moveslider");
+    formSection.classList.remove("form-section-move");      
+    <% if (locals.auth) { %>
+    errorMessage.textContent = 'User not registered';
+    errorMessage.style.visibility = 'visible';
+  <% } else { %>
+    errorMessage.style.visibility = 'hidden';
+  <% } %>
+        })
+    </script>
+</body>
+</html>
